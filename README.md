@@ -11,3 +11,20 @@ class Games{
     description: 'fetch game information.'
 }
 ```
+
+## 概要
+
+ゲームや書籍などの情報をmarkdown headerとしてアウトプットするモジュール
+
+## テンプレート
+
+```markdown
+---
+Title: str
+RelatedLinks: dict[str, str]
+CreatedAt: str
+Description: str
+---
+```
+
+createdAt: 2022-10-16
