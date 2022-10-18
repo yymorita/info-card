@@ -45,7 +45,7 @@ class AuthHandler:
             is_valid = not is_valid
         return is_valid
 
-    def generate_token(self):
+    def update_token(self):
         """return bearer token. and set as environmental variable"""
         token = requests.post(const.AUTH_URL, params=payload).json()
         os.environ['TOKEN'] = token
@@ -57,5 +57,5 @@ if __name__ == '__main__':
     manager = AuthHandler(current_token)
     is_token_valid = manager.check_token()
     if not is_token_valid:
-        manager.generate_token()
+        manager.update_token()
     print(f'Bearer token: {manager.token}')
