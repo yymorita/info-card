@@ -2,10 +2,10 @@
 Create Card Object.
 """
 
-import requests
 import auth_handler
 import constant as const
 import abstract_request
+import md_card
 
 TARGET_ID = 14362
 
@@ -14,33 +14,24 @@ HEADERS = {
     'Authorization': f'Bearer {const.TOKEN}'
 }
 
-BASIC_FIELDS = f'fields name,release_dates,url,websites,artworks,cover; where id={TARGET_ID};'
-
-basic_info = requests.post(
-    f'{const.BASE_URL}/games', headers=HEADERS, data=BASIC_FIELDS).json()[0]
-
-NAME = basic_info['name']
-COVER_ID = basic_info['cover']
-ARTWORKS_ID = basic_info['artworks']
-RELEASE_DATES = basic_info['release_dates']
-WEBSITES = basic_info['websites']
-
-base_request = abstract_request.abstract_request(const.BASE_URL, HEADERS)
-
-
-class Card:
-    """Basic game informaiton"""
-    name: str
-    cover: str
-    artworks: list[str]
-
-    def __init__(self, name, cover, artworks):
-        self.name = name
-        self.cover = cover
-        self.artworks = artworks
+BASIC_FIELDS = ['name', 'release_dates',
+                'url', 'websites', 'artworks', 'cover']
 
 
 if __name__ == '__main__':
+    auth_manager = auth_handler.AuthHandler(const.TOKEN)
+    if not auth_manager.check_token():
+        auth_manager.update_token()
+
+    base_request = abstract_request.abstract_request(const.BASE_URL, HEADERS)
+    basic_info = base_request('games', BASIC_FIELDS, TARGET_ID)
+
+    TITLE = basic_info['name']
+    COVER_ID = basic_info['cover']
+    ARTWORKS_ID = basic_info['artworks']
+    RELEASE_DATES = basic_info['release_dates']
+    WEBSITES = basic_info['websites']
+
     artworks = base_request('artworks', ['url'], ARTWORKS_ID)
     artworks_url = [element.get('url') for element in artworks]
     # print(artworks_url)
@@ -57,7 +48,7 @@ if __name__ == '__main__':
     websites_url = [element.get('url') for element in websites]
     # print(websites_url)
 
-    this_game = Card(NAME, cover_url, artworks_url)
-    print(f'Name: {this_game.name}')
+    this_game = md_card.Card(TITLE, cover_url, artworks_url)
+    print(f'Title: {this_game.name}')
     print(f'Cover: {this_game.cover}')
     print(f'Artworks: {this_game.artworks}')
