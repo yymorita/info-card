@@ -1,0 +1,18 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: monospace;
+}
+
+.info-card {
+    width: 50%;
+    height: 50%;
+}
+
+.container {
+    display: flex;
+}
+
+img {
+    width: 90%;
+}
